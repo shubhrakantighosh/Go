@@ -1,4 +1,4 @@
-# Go
+# Golang
 
 # Topics 
 
@@ -12,6 +12,24 @@
 
 ❖ Slice
 
+❖ Map
+
 ❖ Struct
 
 ❖ Enum
+
+❖ Packages
+
+❖ Method
+
+❖ Interface
+
+❖ Enum
+
+❖ Json
+
+❖ Type Conversion
+
+❖ File
+
+❖ Folder
