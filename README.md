@@ -33,3 +33,5 @@
 ❖ File
 
 ❖ Folder
+
+❖ Pointer
