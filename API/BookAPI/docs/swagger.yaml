@@ -1,0 +1,20 @@
+basePath: /
+host: localhost:8080
+info:
+  contact: {}
+  description: A book service API in Go using Gin framework
+  title: book Service API
+  version: "1.0"
+paths:
+  /books:
+    get:
+      description: Return list of tags.
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: books
+      summary: Get All tags.
+      tags:
+      - tags
+swagger: "2.0"

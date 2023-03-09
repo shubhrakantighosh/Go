@@ -1,0 +1,30 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "A book service API in Go using Gin framework",
+        "title": "book Service API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/books": {
+            "get": {
+                "description": "Return list of tags.",
+                "tags": [
+                    "tags"
+                ],
+                "summary": "Get All tags.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "books"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
