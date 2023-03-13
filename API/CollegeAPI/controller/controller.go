@@ -1,7 +1,9 @@
 package controller
 
 import (
+	"CollegeAPI/DTO"
 	"CollegeAPI/model"
+	"CollegeAPI/repository"
 	"CollegeAPI/service"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -18,7 +20,11 @@ func NewCollegeController(service service.CollegeService) *CollegeController {
 
 func (college *CollegeController) FindAllStudents(c *gin.Context) {
 	students := college.service.FindAllStudents()
-	c.IndentedJSON(http.StatusOK, students)
+	students_details := []DTO.Student_Details_DTO{}
+	for _, j := range students {
+		students_details = append(students_details, DTO.Student_Details_DTO{j.Roll, j.FirstName, j.FirstName, j.Age, repository.GradeGenerate(j.Grade), j.Address.PinCode, j.Address.City, j.Address.State})
+	}
+	c.IndentedJSON(http.StatusOK, students_details)
 }
 
 func (college *CollegeController) SearchByStudentRoll(c *gin.Context) {
@@ -57,13 +63,16 @@ func (college *CollegeController) SearchByStudentByCity(c *gin.Context) {
 func (college *CollegeController) RegisterStudent(c *gin.Context) {
 	student := model.Student{}
 	c.ShouldBindJSON(&student)
-	student.Grade = model.A
+	if college.service.SearchByStudentRoll(student.Roll).Roll != 0 {
+		c.IndentedJSON(http.StatusOK, "Already Registered.")
+		return
+	}
 	err := college.service.RegisterStudent(student)
 	if err != nil {
 		c.IndentedJSON(http.StatusBadRequest, err)
 		return
 	}
-	c.IndentedJSON(http.StatusOK, student)
+	c.IndentedJSON(http.StatusOK, "Registered successfully.")
 }
 
 func (college *CollegeController) NameSearchStartWith(c *gin.Context) {

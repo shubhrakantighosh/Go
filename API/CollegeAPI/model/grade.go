@@ -7,4 +7,5 @@ const (
 	B Grade = 2
 	C Grade = 3
 	D Grade = 4
+	F Grade = 0
 )

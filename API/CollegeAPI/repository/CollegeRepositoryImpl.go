@@ -92,6 +92,8 @@ func (c *CollegeRepositoryImpl) SearchByStudentByCity(city string) []DTO.Student
 }
 
 func (c *CollegeRepositoryImpl) RegisterStudent(student model.Student) error {
+	grade := GradeGenerate_MySQL(student.Marks)
+	student.Grade = model.Grade(grade)
 	err := c.Db.Save(&student)
 	if err != nil {
 		return nil
