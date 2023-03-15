@@ -15,4 +15,6 @@ type CollegeRepository interface {
 	RegisterStudent(student model.Student) error
 	NameSearchStartWith(name string) []DTO.StudentDTO
 	StudentsCheck(students []model.Student) []string
+	RegisterTeacher(teacher model.Teacher) error
+	ValidationData(teacher model.Teacher) []model.Student
 }

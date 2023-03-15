@@ -19,6 +19,8 @@ func Router(controller *controller.CollegeController) *gin.Engine {
 	collegeRouter.POST("/student", controller.RegisterStudent)
 	collegeRouter.GET("/start/:name", controller.NameSearchStartWith)
 	collegeRouter.POST("/test", controller.StudentsCheck)
+	collegeRouter.POST("/teacher", controller.RegisterTeacher)
+	collegeRouter.POST("/teacher/Id", controller.ValidationData)
 
 	return router
 }

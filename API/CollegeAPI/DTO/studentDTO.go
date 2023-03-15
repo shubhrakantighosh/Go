@@ -1,5 +1,7 @@
 package DTO
 
+import "CollegeAPI/model"
+
 type StudentDTO struct {
 	Roll     int
 	FistName string
@@ -13,7 +15,7 @@ type Student_Details_DTO struct {
 	FistName string
 	LastName string
 	Age      int
-	Grade    string
+	Grade    model.Grade
 	PinCode  string
 	City     string
 	State    string

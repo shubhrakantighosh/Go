@@ -3,9 +3,9 @@ package controller
 import (
 	"CollegeAPI/DTO"
 	"CollegeAPI/model"
-	"CollegeAPI/repository"
 	"CollegeAPI/service"
 	"github.com/gin-gonic/gin"
+	"gopkg.in/validator.v2"
 	"net/http"
 	"strconv"
 )
@@ -22,9 +22,9 @@ func (college *CollegeController) FindAllStudents(c *gin.Context) {
 	students := college.service.FindAllStudents()
 	students_details := []DTO.Student_Details_DTO{}
 	for _, j := range students {
-		students_details = append(students_details, DTO.Student_Details_DTO{j.Roll, j.FirstName, j.FirstName, j.Age, repository.GradeGenerate(j.Grade), j.Address.PinCode, j.Address.City, j.Address.State})
+		students_details = append(students_details, DTO.Student_Details_DTO{j.Roll, j.FistName, j.LastName, j.Age, "A", j.PinCode, j.City, j.State})
 	}
-	c.IndentedJSON(http.StatusOK, students_details)
+	c.IndentedJSON(http.StatusOK, students)
 }
 
 func (college *CollegeController) SearchByStudentRoll(c *gin.Context) {
@@ -62,14 +62,16 @@ func (college *CollegeController) SearchByStudentByCity(c *gin.Context) {
 
 func (college *CollegeController) RegisterStudent(c *gin.Context) {
 	student := model.Student{}
-	c.ShouldBindJSON(&student)
-	if college.service.SearchByStudentRoll(student.Roll).Roll != 0 {
-		c.IndentedJSON(http.StatusOK, "Already Registered.")
+	if err := c.ShouldBindJSON(&student); err != nil {
+		c.IndentedJSON(http.StatusBadRequest, err.Error())
 		return
 	}
-	err := college.service.RegisterStudent(student)
-	if err != nil {
-		c.IndentedJSON(http.StatusBadRequest, err)
+	if err := validator.Validate(student); err != nil {
+		c.IndentedJSON(http.StatusBadGateway, "Wrong Grade")
+		return
+	}
+	if error := college.service.RegisterStudent(student); error != nil {
+		c.IndentedJSON(http.StatusBadRequest, error.Error())
 		return
 	}
 	c.IndentedJSON(http.StatusOK, "Registered successfully.")
@@ -90,4 +92,34 @@ func (college *CollegeController) StudentsCheck(c *gin.Context) {
 	c.ShouldBindJSON(&student)
 	results := college.service.StudentsCheck(student)
 	c.IndentedJSON(http.StatusOK, results)
+}
+
+func (college *CollegeController) RegisterTeacher(c *gin.Context) {
+	teacher := model.Teacher{}
+	if err := c.ShouldBindJSON(&teacher); err != nil {
+		c.IndentedJSON(http.StatusBadRequest, err.Error())
+		return
+	}
+	if err := college.service.RegisterTeacher(teacher); err != nil {
+		c.IndentedJSON(http.StatusBadRequest, err.Error())
+		return
+	}
+	c.IndentedJSON(http.StatusOK, "Registered successfully.")
+}
+
+func (college *CollegeController) ValidationData(c *gin.Context) {
+	teacher := model.Teacher{}
+	if err := c.ShouldBindJSON(&teacher); err != nil {
+		c.IndentedJSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	result := college.service.ValidationData(teacher)
+
+	if result == nil {
+		c.IndentedJSON(http.StatusBadRequest, "Not Found")
+		return
+	}
+
+	c.IndentedJSON(http.StatusOK, result)
 }

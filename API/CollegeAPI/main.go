@@ -13,7 +13,7 @@ import (
 func main() {
 
 	Db := config.DataBaseConnection()
-	Db.AutoMigrate(&model.Student{})
+	Db.AutoMigrate(&model.University{}, &model.Teacher{}, &model.Address{}, &model.Student{})
 
 	collegeRepository := repository.NewCollegeRepositoryImpl(Db)
 	collegeService := service.NewCollegeServiceImpl(collegeRepository)

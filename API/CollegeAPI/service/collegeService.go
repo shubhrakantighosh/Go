@@ -6,7 +6,7 @@ import (
 )
 
 type CollegeService interface {
-	FindAllStudents() []model.Student
+	FindAllStudents() []DTO.Student_Details_DTO
 	SearchByStudentRoll(roll int) DTO.StudentDTO
 	SearchByStudentName(name string) []DTO.StudentDTO
 	SortByStudentName() []DTO.StudentDTO
@@ -15,4 +15,6 @@ type CollegeService interface {
 	RegisterStudent(student model.Student) error
 	NameSearchStartWith(name string) []DTO.StudentDTO
 	StudentsCheck(students []model.Student) []string
+	RegisterTeacher(teacher model.Teacher) error
+	ValidationData(teacher model.Teacher) []string
 }

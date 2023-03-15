@@ -3,6 +3,7 @@ package repository
 import (
 	"CollegeAPI/DTO"
 	"CollegeAPI/model"
+	"database/sql"
 	"gorm.io/gorm"
 	"sort"
 )
@@ -17,13 +18,13 @@ func NewCollegeRepositoryImpl(Db *gorm.DB) CollegeRepository {
 
 func (c *CollegeRepositoryImpl) FindAllStudents() []model.Student {
 	students := []model.Student{}
-	c.Db.Find(&students)
+	c.Db.Preload("Address").Find(&students)
 	return students
 }
 
 func (c *CollegeRepositoryImpl) SearchByStudentRoll(roll int) DTO.StudentDTO {
 	student := model.Student{}
-	c.Db.Find(&student, roll)
+	c.Db.Find(&student, "roll", roll)
 	return DTO.StudentDTO{student.Roll, student.FirstName, student.LastName, student.Age, student.Marks}
 }
 
@@ -92,14 +93,11 @@ func (c *CollegeRepositoryImpl) SearchByStudentByCity(city string) []DTO.Student
 }
 
 func (c *CollegeRepositoryImpl) RegisterStudent(student model.Student) error {
-	grade := GradeGenerate_MySQL(student.Marks)
-	student.Grade = model.Grade(grade)
 	err := c.Db.Save(&student)
 	if err != nil {
-		return nil
-	} else {
 		return err.Error
 	}
+	return nil
 }
 
 func (c *CollegeRepositoryImpl) NameSearchStartWith(name string) []DTO.StudentDTO {
@@ -127,4 +125,32 @@ func (c *CollegeRepositoryImpl) StudentsCheck(students []model.Student) []string
 		}
 	}
 	return result
+}
+
+func (c *CollegeRepositoryImpl) RegisterTeacher(teacher model.Teacher) error {
+	err := c.Db.Save(&teacher)
+	if err != nil {
+		return err.Error
+	}
+	return nil
+}
+
+func (c *CollegeRepositoryImpl) ValidationData(teacher model.Teacher) []model.Student {
+	t := model.Teacher{}
+	c.Db.Find(&t, teacher.ID)
+
+	if t.ID == 0 {
+		return nil
+	}
+
+	students := []model.Student{}
+
+	for _, i := range teacher.Student {
+		student := model.Student{}
+		c.Db.Where("teacher_id = @teacher_id AND roll = @roll AND first_name = @first_name", sql.Named("teacher_id", teacher.ID), sql.Named("roll", i.Roll), sql.Named("first_name", i.FirstName)).Find(&student)
+		students = append(students, student)
+	}
+
+	return students
+
 }

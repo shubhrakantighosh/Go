@@ -11,11 +11,12 @@ const (
 	user         = "root"
 	password     = "shubhrakanti"
 	databaseName = "db2"
+	parseTime    = "?parseTime=true"
 )
 
 func DataBaseConnection() *gorm.DB {
 
-	dsn := user + ":" + password + "@tcp(" + host + ":" + port + ")/" + databaseName
+	dsn := user + ":" + password + "@tcp(" + host + ":" + port + ")/" + databaseName + parseTime
 	db, _ := gorm.Open(mysql.Open(dsn))
 	return db
 }
