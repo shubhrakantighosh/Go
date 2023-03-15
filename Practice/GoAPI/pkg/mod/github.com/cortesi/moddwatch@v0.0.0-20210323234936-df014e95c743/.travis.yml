@@ -1,0 +1,19 @@
+language: go
+
+go:
+    - 1.16
+
+os:
+    - linux
+    - osx
+    - windows
+
+install:
+    - go get -t -v ./...
+
+script:
+    - go test -v -race ./...
+
+notifications:
+    email:
+        - aldo@corte.si

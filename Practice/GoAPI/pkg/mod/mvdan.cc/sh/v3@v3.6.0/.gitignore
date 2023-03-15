@@ -1,0 +1,12 @@
+*.a
+*.zip
+
+# Don't store any of this in the master branch.
+suppressions/
+crashers/
+corpus/
+vendor/
+
+/_js/index.js*
+/_js/_js.js*
+/_js/*.log
